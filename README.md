@@ -23,8 +23,8 @@ Important files here include
 - **model.py** : It contains the script to create and train the model using the collected in subdirectories of **./data**
 - **drive.py** : Provided by [Udacity](https://github.com/udacity/CarND-Behavioral-Cloning-P3/blob/master/drive.py) for model testing
 - **model.h5** : Contains a trained convolution neural network.
-- **writeup_report.md** : Results summary
-- **images/VideoOut.mp4** a video of simulator driving the car autonomously around the track
+- **README.md** : Results summary
+- **images/VideoOut.mp4** and **images/VideoOut2.mp4** a video of simulator driving the car autonomously around the track
 
 # Train data accumulation
 To begin with some data was provided by Udacity for training. My initial estimate was that this would be enough and I would not need to collect more since collecting 
