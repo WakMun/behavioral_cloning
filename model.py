@@ -92,16 +92,17 @@ def batch_maker(samples, batch_size=64):
             yield sklearn.utils.shuffle(X_batch, y_batch)
 
             
-def resize(x):
+def resize_normalize(x):
     import tensorflow as tf # because of this line, this function had to be declared extra instead of in a lambda. Solution from https://github.com/keras-team/keras/issues/5298
-    return tf.image.resize_images(x ,(32, 160))
+    x = tf.image.resize_images(x ,(32, 160))
+    return ((x / 255.0) - 0.5)
     
     
     
 
 
 samples = get_samples('./data', 0.2, -0.2)
-print (samples[0])
+#print (samples[0])
 batch_size = 64
 
 # Splitting samples and creating generators.
@@ -127,25 +128,19 @@ model = Sequential()
 
 #Preprocessing step 1: Cropping out the clutter
 model.add(Cropping2D(cropping=((70, 25), (0, 0)), input_shape=(160,320,3)))
-
-# Preprocessing step 2: Reduce the dimensions by a factor of 2
-model.add(Lambda(resize, output_shape=(32, 160, 3) ))
-
-#Preprocessing step 3: Normalization
-model.add(Lambda(lambda x: (x / 255.0) - 0.5))
-
-
+# Preprocessing step 2: Reduce the dimensions by a factor of 2 and normalize
+model.add(Lambda(resize_normalize, output_shape=(32, 160, 3) ))
 
 #Nvidia model
 model.add(Conv2D(24, (5,5), strides=(2,2), activation='relu'))
-#model.add(Conv2D(36, (5,5), strides=(2,2), activation='relu'))
-model.add(Conv2D(48, (5,5), strides=(2,2), activation='relu'))
+model.add(Conv2D(36, (5,5), strides=(2,2), activation='relu'))
+model.add(Conv2D(48, (3,3), activation='relu'))
 model.add(Conv2D(64, (3,3), activation='relu'))
-model.add(Conv2D(64, (3,3), activation='relu'))
+#model.add(Conv2D(64, (3,3), activation='relu'))
 model.add(Flatten())
 model.add(Dense(100))
 model.add(Dropout(0.4))
-model.add(Dense(50))
+model.add(Dense(20))
 model.add(Dropout(0.4))
 model.add(Dense(10))
 model.add(Dense(1))
@@ -154,7 +149,7 @@ model.add(Dense(1))
 
 model.compile(loss='mse', optimizer='adam')
 
-history_obj = model.fit_generator(train_gen, epochs=4, verbose=1,\
+history_obj = model.fit_generator(train_gen, epochs=3, verbose=1,\
                                   validation_data=valid_gen, \
                                   steps_per_epoch=steps_per_epoch, \
                                   validation_steps=validation_steps)
@@ -171,12 +166,17 @@ print(history_obj.history['loss'])
 print('Validation Loss')
 print(history_obj.history['val_loss'])
 
-plt.plot(history_obj.history['loss'])
-plt.plot(history_obj.history['val_loss'])
+x = [i for i in range(1,len(history_obj.history['loss'])+1)]
+print(x)
+
+plt.plot(x, history_obj.history['loss'], '*-')
+plt.plot(x, history_obj.history['val_loss'], '*-')
+plt.xticks(x)
 plt.title('Model Mean Squared Error Loss')
 plt.ylabel('mean squared error loss')
 plt.xlabel('epoch')
 plt.legend(['training set', 'validation set'], loc='upper right')
 #plt.show()
 plt.savefig('images/modelloss.jpg', bbox_inches='tight')
+
 
