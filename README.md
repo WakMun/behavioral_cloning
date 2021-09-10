@@ -1,12 +1,66 @@
+[image1]: ./images/modelloss.jpg "Accuracy per Epoch and most Error Prone Classes"
+
+
 # Behavioral Cloning Project
 
 [![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
 
 Overview
 ---
-This repository contains starting files for the Behavioral Cloning Project.
+This repository contains files for the Behavioral Cloning Project from udacity nano degree.
 
-In this project, you will use what you've learned about deep neural networks and convolutional neural networks to clone driving behavior. You will train, validate and test a model using Keras. The model will output a steering angle to an autonomous vehicle.
+In this project, I use what I've learned about deep neural networks and convolutional neural networks to clone driving behavior. I trained, validatde and tested a model using Keras. The model outputs a steering angle to control and keep a simulated vehicle over a predefined path.
+
+# Main Goals of the Project
+Main goals of the project were as follows:
+* Develop and implement a deep neural netowrk to be able to clone driving behavior of a human
+* Train and test the developed model
+* 
+
+
+# Model Summary 
+
+
+```
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+cropping2d_1 (Cropping2D)    (None, 65, 320, 3)        0         
+_________________________________________________________________
+lambda_1 (Lambda)            (None, 32, 160, 3)        0         
+_________________________________________________________________
+lambda_2 (Lambda)            (None, 32, 160, 3)        0         
+_________________________________________________________________
+conv2d_1 (Conv2D)            (None, 14, 78, 24)        1824      
+_________________________________________________________________
+conv2d_2 (Conv2D)            (None, 5, 37, 48)         28848     
+_________________________________________________________________
+conv2d_3 (Conv2D)            (None, 3, 35, 64)         27712     
+_________________________________________________________________
+conv2d_4 (Conv2D)            (None, 1, 33, 64)         36928     
+_________________________________________________________________
+flatten_1 (Flatten)          (None, 2112)              0         
+_________________________________________________________________
+dense_1 (Dense)              (None, 100)               211300    
+_________________________________________________________________
+dropout_1 (Dropout)          (None, 100)               0         
+_________________________________________________________________
+dense_2 (Dense)              (None, 50)                5050      
+_________________________________________________________________
+dropout_2 (Dropout)          (None, 50)                0         
+_________________________________________________________________
+dense_3 (Dense)              (None, 10)                510       
+_________________________________________________________________
+dense_4 (Dense)              (None, 1)                 11        
+=================================================================
+Total params: 312,183
+Trainable params: 312,183
+Non-trainable params: 0
+
+```
+
+![alt text][image1]
+
 
 We have provided a simulator where you can steer a car around a track for data collection. You'll use image data and steering angles to train a neural network and then use this model to drive the car autonomously around the track.
 
