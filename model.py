@@ -38,7 +38,7 @@ def get_samples(path, left_correction, right_correction):
     '''
     reads in paths (not actual images, just paths) and measurements and shuffles them and returns this data set.
     '''
-    directories = [x[0] for x in os.walk(path)]
+    directories = [x[0] for x in os.walk(path, followlinks=True)]
     dataDirectories = list(filter(lambda directory: os.path.isfile(directory + '/driving_log.csv'), directories))
     
     samples = [] #each element contains [sample_no, path, angle, inverted?]
@@ -80,7 +80,7 @@ def batch_maker(samples, batch_size=64):
                 img = cv2.cvtColor(originalImage, cv2.COLOR_BGR2RGB)
                 if (must_flip):
                     #img = cv2.flip(img, 1)
-                    np.fliplr(img)
+                    img=np.fliplr(img)
                     
                 images.append(img)
                 angles.append(measurement)
@@ -94,7 +94,7 @@ def batch_maker(samples, batch_size=64):
             
 def resize_normalize(x):
     import tensorflow as tf # because of this line, this function had to be declared extra instead of in a lambda. Solution from https://github.com/keras-team/keras/issues/5298
-    x = tf.image.resize_images(x ,(32, 160))
+    x = tf.image.resize_images(x ,(35, 160))
     return ((x / 255.0) - 0.5)
     
     
@@ -127,9 +127,12 @@ valid_gen = batch_maker(valid_samples, batch_size=64)
 model = Sequential()
 
 #Preprocessing step 1: Cropping out the clutter
-model.add(Cropping2D(cropping=((70, 25), (0, 0)), input_shape=(160,320,3)))
+#model.add(Lambda(lambda x: (x / 255.0) - 0.5, input_shape=(160,320,3)))
+model.add(Cropping2D(cropping=((70, 20), (0, 0)), input_shape=(160,320,3)))
+#model.add(Cropping2D(cropping=((50, 20), (0, 0))))
 # Preprocessing step 2: Reduce the dimensions by a factor of 2 and normalize
-model.add(Lambda(resize_normalize, output_shape=(32, 160, 3) ))
+#model.add(Lambda(resize_normalize, output_shape=(32, 160, 3) ))
+model.add(Lambda(resize_normalize, output_shape=(35, 160, 3) ))
 
 #Nvidia model
 model.add(Conv2D(24, (5,5), strides=(2,2), activation='relu'))
@@ -146,17 +149,19 @@ model.add(Dense(10))
 model.add(Dense(1))
 
 
-
 model.compile(loss='mse', optimizer='adam')
 
-history_obj = model.fit_generator(train_gen, epochs=3, verbose=1,\
+model.summary()
+
+
+history_obj = model.fit_generator(train_gen, epochs=4, verbose=1,\
                                   validation_data=valid_gen, \
                                   steps_per_epoch=steps_per_epoch, \
                                   validation_steps=validation_steps)
 
 
 
-model.save('model.h5')
+model.save('model2.h5')
 
 model.summary()
 
