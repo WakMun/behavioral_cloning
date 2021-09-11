@@ -1,4 +1,5 @@
 [image1]: ./images/modelloss.jpg "Accuracy per Epoch and most Error Prone Classes"
+[image2]: ./images/trainImages.jpg "A sample of images used for Training"
 
 
 # Behavioral Cloning Project
@@ -38,9 +39,12 @@ This way every acquired data point resulted in four training images.
 
 However, I found out that training using this data and nVidia model was not enough to successfully drive the car on the track autonommously. 
 
-So, I recorded two more rounds on track 1 and one round on track two. After this I saw major improvement in the results. Same techniques for data augmentation were 
-also applied to the recorded data. 
+So, I recorded two more rounds on track 1 and one round on track two. After this I saw major improvement in the results. 
+Same techniques for data augmentation were also applied to the recorded data.
 
+A sample images generated from a single entry in CSV file is shown:
+
+![alt text][image2]
 
 
 # Model Summary 
@@ -130,7 +134,7 @@ Non-trainable params: 0
 _________________________________________________________________
 ```
 
-Notice the reduction in number of trainable params from approximately 1 million to around 300,000. This results in a noticeable speed up in network training.
+Notice the reduction in number of trainable params from approximately 1 million to around 1/3rd of these. This results in a noticeable speed up in network training.
 In addition, to further speed-up the network training, the size of the input image is reduced to half along each axis in the first lambda layer. 
 This results in 4 times less pixel per image. In total, the training time for second model is reduced by alomst a factor of two, though I did not actually measure it.
 
