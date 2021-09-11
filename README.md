@@ -1,5 +1,6 @@
 [image1]: ./images/modelloss.jpg "Accuracy per Epoch and most Error Prone Classes"
-[image2]: ./images/trainImages.jpg "A sample of images used for Training"
+[image2]: ./images/trainingImages.jpg "A sample of images used for Training"
+[image3]: ./images/layers.png "A visualization of operations in various layers of the network"
 
 
 # Behavioral Cloning Project
@@ -42,7 +43,7 @@ However, I found out that training using this data and nVidia model was not enou
 So, I recorded two more rounds on track 1 and one round on track two. After this I saw major improvement in the results. 
 Same techniques for data augmentation were also applied to the recorded data.
 
-A sample images generated from a single entry in CSV file is shown:
+From each entry in the csv file, four images are generated. A sample of these images is shown here: 
 
 ![alt text][image2]
 
@@ -102,21 +103,21 @@ whole lap of track 1.
 _________________________________________________________________
 Layer (type)                 Output Shape              Param #   
 =================================================================
-cropping2d_1 (Cropping2D)    (None, 65, 320, 3)        0         
+cropping2d_1 (Cropping2D)    (None, 70, 320, 3)        0         
 _________________________________________________________________
-lambda_1 (Lambda)            (None, 32, 160, 3)        0         
+lambda_1 (Lambda)            (None, 35, 160, 3)        0         
 _________________________________________________________________
-conv2d_1 (Conv2D)            (None, 14, 78, 24)        1824      
+conv2d_1 (Conv2D)            (None, 16, 78, 24)        1824      
 _________________________________________________________________
-conv2d_2 (Conv2D)            (None, 5, 37, 36)         21636     
+conv2d_2 (Conv2D)            (None, 6, 37, 36)         21636     
 _________________________________________________________________
-conv2d_3 (Conv2D)            (None, 3, 35, 48)         15600     
+conv2d_3 (Conv2D)            (None, 4, 35, 48)         15600     
 _________________________________________________________________
-conv2d_4 (Conv2D)            (None, 1, 33, 64)         27712     
+conv2d_4 (Conv2D)            (None, 2, 33, 64)         27712     
 _________________________________________________________________
-flatten_1 (Flatten)          (None, 2112)              0         
+flatten_1 (Flatten)          (None, 4224)              0         
 _________________________________________________________________
-dense_1 (Dense)              (None, 100)               211300    
+dense_1 (Dense)              (None, 100)               422500    
 _________________________________________________________________
 dropout_1 (Dropout)          (None, 100)               0         
 _________________________________________________________________
@@ -128,13 +129,13 @@ dense_3 (Dense)              (None, 10)                210
 _________________________________________________________________
 dense_4 (Dense)              (None, 1)                 11        
 =================================================================
-Total params: 280,313
-Trainable params: 280,313
+Total params: 491,513
+Trainable params: 491,513
 Non-trainable params: 0
 _________________________________________________________________
 ```
 
-Notice the reduction in number of trainable params from approximately 1 million to around 1/3rd of these. This results in a noticeable speed up in network training.
+Notice the reduction in number of trainable params from approximately 1 million to around half of that. This results in a noticeable speed up in network training.
 In addition, to further speed-up the network training, the size of the input image is reduced to half along each axis in the first lambda layer. 
 This results in 4 times less pixel per image. In total, the training time for second model is reduced by alomst a factor of two, though I did not actually measure it.
 
@@ -142,9 +143,12 @@ For parameter tune-up: As I used Adam optimizer, I did not need to optimize the 
 
 The video output for the second version of model is uploaded here: [video](images/videoOut2.mp4)
 
-In the following daigram I shows the training beahvior of the model.
+In the following daigram I shows the training behavior of the model.
 
 
 ![alt text][image1]
 
 
+In the end, a visulaization of operations in various layers. 
+
+![alt text][image3]
